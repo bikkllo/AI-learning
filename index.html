@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI学习指南 - 专为小白设计的AI助手</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">
+                        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M9 12l2 2 4-4"/>
+                            <path d="M21 12c0 4.97-4.03 9-9 9s-9-4.03-9-9 9 4.03 9 9z"/>
+                        </svg>
+                    </div>
+                    <h1 class="app-title">AI学习指南</h1>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-links">
+                        <a href="main.html" class="nav-link">工具导航</a>
+                        <a href="index.html" class="nav-link active">AI助手</a>
+                    </div>
+                    <button class="settings-btn" id="settingsBtn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="12" cy="12" r="3"></circle>
+                            <path d="M12 1v6m0 6v6m11-7h-6m-6 0H1"></path>
+                        </svg>
+                        设置
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Welcome Screen (shown on first visit) -->
+            <div class="welcome-screen" id="welcomeScreen">
+                <div class="welcome-content">
+                    <div class="welcome-icon">
+                        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z"/>
+                            <path d="M2 17l10 5 10-5"/>
+                            <path d="M2 12l10 5 10-5"/>
+                        </svg>
+                    </div>
+                    <h2>欢迎来到AI学习指南</h2>
+                    <p>专为AI小白设计的智能学习助手，让你轻松掌握人工智能知识</p>
+                    <div class="welcome-features">
+                        <div class="feature-item">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
+                            </svg>
+                            <span>个性化学习路径</span>
+                        </div>
+                        <div class="feature-item">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <circle cx="12" cy="12" r="10"/>
+                                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
+                                <path d="M12 17h.01"/>
+                            </svg>
+                            <span>智能问答系统</span>
+                        </div>
+                        <div class="feature-item">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M14 9V5a3 3 0 0 0-6 0v4"/>
+                                <rect x="2" y="9" width="20" height="11" rx="2" ry="2"/>
+                            </svg>
+                            <span>安全可靠</span>
+                        </div>
+                    </div>
+                    <p class="welcome-subtitle">首次使用需要配置API设置，让我们开始吧！</p>
+                    <button class="start-btn" id="startBtn">开始配置</button>
+                </div>
+            </div>
+
+            <!-- Chat Interface -->
+            <div class="chat-interface" id="chatInterface">
+                <div class="chat-container">
+                    <!-- AI Guide Panel -->
+                    <div class="guide-panel">
+                        <div class="guide-header">
+                            <h3>AI学习助手</h3>
+                            <span class="guide-status online">在线</span>
+                        </div>
+                        <div class="guide-tips">
+                            <h4>💡 学习建议</h4>
+                            <ul class="tips-list">
+                                <li>从基础概念开始，如"什么是人工智能？"</li>
+                                <li>询问具体的AI应用场景</li>
+                                <li>请教机器学习的入门知识</li>
+                                <li>了解AI工具的使用方法</li>
+                            </ul>
+                        </div>
+                        <div class="quick-questions">
+                            <h4>🚀 快速开始</h4>
+                            <button class="quick-btn" data-question="什么是人工智能？请用简单易懂的方式解释">什么是AI？</button>
+                            <button class="quick-btn" data-question="机器学习和深度学习有什么区别？">机器学习 vs 深度学习</button>
+                            <button class="quick-btn" data-question="作为初学者，我应该如何开始学习AI？">如何开始学习AI？</button>
+                            <button class="quick-btn" data-question="有哪些实用的AI工具推荐给初学者？">推荐AI工具</button>
+                        </div>
+                    </div>
+
+                    <!-- Chat Area -->
+                    <div class="chat-area">
+                        <div class="message-list" id="messageList">
+                            <!-- Messages will be dynamically added here -->
+                        </div>
+                        
+                        <div class="input-area">
+                            <div class="input-container">
+                                <textarea 
+                                    class="message-input" 
+                                    id="messageInput" 
+                                    placeholder="输入您的AI学习问题..."
+                                    rows="1"
+                                ></textarea>
+                                <button class="send-btn" id="sendBtn">
+                                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="22" y1="2" x2="11" y2="13"></line>
+                                        <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                                    </svg>
+                                </button>
+                            </div>
+                            <div class="input-hints">
+                                <span class="hint">💡 提示：按 Enter 发送，Shift + Enter 换行</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Panel -->
+            <div class="settings-panel" id="settingsPanel">
+                <div class="settings-content">
+                    <div class="settings-header">
+                        <h2>API配置设置</h2>
+                        <button class="close-btn" id="closeSettingsBtn">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="18" y1="6" x2="6" y2="18"></line>
+                                <line x1="6" y1="6" x2="18" y2="18"></line>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="settings-description">
+                        <p>配置您的智谱AI API信息以开始使用学习助手</p>
+                    </div>
+                    
+                    <form class="settings-form" id="settingsForm">
+                        <div class="form-group">
+                            <label for="apiUrl">API地址</label>
+                            <input 
+                                type="url" 
+                                id="apiUrl" 
+                                name="apiUrl" 
+                                placeholder="https://open.bigmodel.cn/api/paas/v4/chat/completions"
+                                value="https://open.bigmodel.cn/api/paas/v4/chat/completions"
+                                required
+                            >
+                            <small class="form-help">智谱AI的API接口地址</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="apiKey">API密钥</label>
+                            <input 
+                                type="password" 
+                                id="apiKey" 
+                                name="apiKey" 
+                                placeholder="请输入您的智谱AI API Key"
+                                required
+                            >
+                            <small class="form-help">在智谱AI开放平台获取您的API密钥</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="modelName">模型名称</label>
+                            <select id="modelName" name="modelName" required>
+                                <option value="">选择模型</option>
+                                <option value="glm-4">GLM-4 (推荐)</option>
+                                <option value="glm-4v">GLM-4V (视觉模型)</option>
+                                <option value="glm-3-turbo">GLM-3 Turbo</option>
+                            </select>
+                            <small class="form-help">选择适合的智谱AI模型</small>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="test-btn" id="testConfigBtn">测试连接</button>
+                            <button type="submit" class="save-btn">保存配置</button>
+                        </div>
+                    </form>
+
+                    <div class="api-help">
+                        <h4>📚 如何获取API密钥？</h4>
+                        <ol>
+                            <li>访问 <a href="https://open.bigmodel.cn/" target="_blank">智谱AI开放平台</a></li>
+                            <li>注册并登录账户</li>
+                            <li>在控制台中创建API密钥</li>
+                            <li>复制密钥并粘贴到上方输入框</li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Panel Overlay -->
+            <div class="settings-overlay" id="settingsOverlay"></div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>&copy; 2024 AI学习指南. 让AI学习变得简单有趣.</p>
+        </footer>
+    </div>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="spinner"></div>
+        <span>AI正在思考中...</span>
+    </div>
+
+    <!-- Toast Notifications -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
