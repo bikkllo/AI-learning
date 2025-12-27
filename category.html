@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI工具分类 - AI工具导航</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="category.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <div class="brand-icon">🚀</div>
+                <span class="brand-text">AI工具导航</span>
+            </div>
+            <div class="nav-links">
+                <a href="main.html" class="nav-link active">工具导航</a>
+                <a href="index.html" class="nav-link">AI助手</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <div class="breadcrumb-container">
+            <a href="main.html" class="breadcrumb-link">首页</a>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="9,18 15,12 9,6"></polyline>
+            </svg>
+            <span class="breadcrumb-current" id="breadcrumbCurrent">分类</span>
+        </div>
+    </div>
+
+    <!-- Category Header -->
+    <section class="category-header" id="categoryHeader">
+        <div class="category-header-container">
+            <div class="category-info">
+                <div class="category-icon-large" id="categoryIcon">🔧</div>
+                <div class="category-details">
+                    <h1 class="category-title" id="categoryTitle">工具分类</h1>
+                    <p class="category-description" id="categoryDescription">工具描述</p>
+                    <div class="category-stats">
+                        <div class="stat-badge">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M20 6L9 17l-5-5"/>
+                            </svg>
+                            <span id="toolCount">0 个工具</span>
+                        </div>
+                        <div class="stat-badge">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/>
+                            </svg>
+                            <span id="recommendedCount">0 个推荐</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="back-btn" onclick="history.back()">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15,18 9,12 15,6"></polyline>
+                </svg>
+                返回
+            </button>
+        </div>
+    </section>
+
+    <!-- Filter and Search -->
+    <section class="filters">
+        <div class="filters-container">
+            <div class="search-box">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="11" cy="11" r="8"/>
+                    <path d="m21 21-4.35-4.35"/>
+                </svg>
+                <input type="text" id="searchInput" placeholder="搜索工具...">
+            </div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" data-filter="all">全部</button>
+                <button class="filter-btn" data-filter="recommended">推荐</button>
+                <button class="filter-btn" data-filter="beginner">初学者</button>
+                <button class="filter-btn" data-filter="intermediate">进阶</button>
+                <button class="filter-btn" data-filter="advanced">高级</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Tools Grid -->
+    <section class="tools">
+        <div class="tools-container">
+            <div class="tools-grid" id="toolsGrid">
+                <!-- Tools will be dynamically loaded here -->
+            </div>
+            
+            <!-- Empty State -->
+            <div class="empty-state" id="emptyState" style="display: none;">
+                <div class="empty-icon">🔍</div>
+                <h3>没有找到相关工具</h3>
+                <p>尝试调整搜索条件或筛选选项</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Related Categories -->
+    <section class="related-categories" id="relatedCategories">
+        <div class="related-container">
+            <h2 class="related-title">相关分类</h2>
+            <div class="related-grid" id="relatedGrid">
+                <!-- Related categories will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <div class="brand-icon">🚀</div>
+                    <span class="brand-text">AI工具导航</span>
+                </div>
+                <p class="footer-description">发现和使用最好的AI工具，提升工作和学习效率</p>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 AI工具导航. 让AI为你工作.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Loading Indicator -->
+    <div class="loading-indicator" id="loadingIndicator">
+        <div class="spinner"></div>
+        <span>加载中...</span>
+    </div>
+
+    <!-- Tool Detail Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">工具详情</h3>
+                <button class="modal-close" id="modalClose">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- Tool details will be loaded here -->
+            </div>
+            <div class="modal-footer">
+                <button class="btn-secondary" id="modalCancel">取消</button>
+                <a href="#" class="btn-primary" id="modalVisit" target="_blank">访问工具</a>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/category.js"></script>
+</body>
+</html>

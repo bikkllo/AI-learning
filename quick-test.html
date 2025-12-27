@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>快速测试 - AI工具导航</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .test-result {
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            border-left: 4px solid #ccc;
+        }
+        .success { background: #e8f5e8; border-left-color: #4caf50; }
+        .error { background: #ffe6e6; border-left-color: #d32f2f; }
+        .warning { background: #fff3cd; border-left-color: #ff9800; }
+        .info { background: #e3f2fd; border-left-color: #2196f3; }
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
+        }
+        button:hover { background: #005a8b; }
+        pre { background: #f5f5f5; padding: 10px; border-radius: 4px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>🚀 AI工具导航 - 快速测试</h1>
+    
+    <div class="test-result info">
+        <h3>📋 测试说明</h3>
+        <p>此页面将快速检测您的环境是否正确配置。点击下方按钮开始测试。</p>
+    </div>
+
+    <button onclick="runQuickTest()">🔍 开始快速测试</button>
+    
+    <div id="testResults"></div>
+
+    <script>
+        async function runQuickTest() {
+            const resultsDiv = document.getElementById('testResults');
+            resultsDiv.innerHTML = '<div class="test-result info"><h3>🔄 正在测试...</h3></div>';
+            
+            const results = [];
+            
+            // 测试1: 检查访问协议
+            const protocol = window.location.protocol;
+            if (protocol === 'file:') {
+                results.push({
+                    type: 'error',
+                    title: '❌ 协议检查失败',
+                    message: '您正在使用 file:// 协议访问页面。这会导致数据加载失败。',
+                    solution: '请使用 HTTP 服务器访问页面。参考下方解决方案。'
+                });
+            } else {
+                results.push({
+                    type: 'success',
+                    title: '✅ 协议检查通过',
+                    message: `正在使用 ${protocol} 协议访问页面。`
+                });
+            }
+            
+            // 测试2: 检查 tools.json 文件
+            try {
+                const response = await fetch('data/tools.json');
+                if (response.ok) {
+                    const data = await response.json();
+                    if (data.categories && Array.isArray(data.categories)) {
+                        results.push({
+                            type: 'success',
+                            title: '✅ 数据文件检查通过',
+                            message: `成功加载 ${data.categories.length} 个分类数据。`
+                        });
+                    } else {
+                        results.push({
+                            type: 'error',
+                            title: '❌ 数据格式错误',
+                            message: 'tools.json 文件格式不正确，缺少 categories 数组。'
+                        });
+                    }
+                } else {
+                    results.push({
+                        type: 'error',
+                        title: '❌ 数据文件加载失败',
+                        message: `HTTP ${response.status}: ${response.statusText}`,
+                        solution: '请检查 data/tools.json 文件是否存在且可访问。'
+                    });
+                }
+            } catch (error) {
+                results.push({
+                    type: 'error',
+                    title: '❌ 网络请求失败',
+                    message: error.message,
+                    solution: '请检查网络连接或文件路径。'
+                });
+            }
+            
+            // 测试3: 检查 JavaScript 功能
+            try {
+                const testArray = [1, 2, 3];
+                const testResult = testArray.map(x => x * 2);
+                if (testResult.length === 3) {
+                    results.push({
+                        type: 'success',
+                        title: '✅ JavaScript 功能正常',
+                        message: '浏览器支持现代 JavaScript 功能。'
+                    });
+                }
+            } catch (error) {
+                results.push({
+                    type: 'error',
+                    title: '❌ JavaScript 功能异常',
+                    message: '浏览器不支持某些 JavaScript 功能。'
+                });
+            }
+            
+            // 显示结果
+            let html = '';
+            results.forEach(result => {
+                html += `
+                    <div class="test-result ${result.type}">
+                        <h3>${result.title}</h3>
+                        <p>${result.message}</p>
+                        ${result.solution ? `<p><strong>解决方案:</strong> ${result.solution}</p>` : ''}
+                    </div>
+                `;
+            });
+            
+            // 添加解决方案
+            const hasErrors = results.some(r => r.type === 'error');
+            if (hasErrors) {
+                html += `
+                    <div class="test-result warning">
+                        <h3>🛠️ 推荐解决方案</h3>
+                        <p><strong>如果您看到错误，请按以下步骤操作：</strong></p>
+                        <ol>
+                            <li><strong>使用 HTTP 服务器：</strong></li>
+                            <pre>cd front
+python -m http.server 8000
+# 然后访问: http://localhost:8000/main.html</pre>
+                            <li><strong>或者使用 Node.js：</strong></li>
+                            <pre>npx http-server front -p 8000</pre>
+                            <li><strong>检查文件结构：</strong></li>
+                            <pre>front/
+├── main.html
+├── data/
+│   └── tools.json
+└── js/
+    └── main.js</pre>
+                        </ol>
+                        <p><strong>更多帮助：</strong> 访问 <a href="debug.html">调试页面</a> 或查看 <a href="../TROUBLESHOOTING.md">故障排除指南</a></p>
+                    </div>
+                `;
+            } else {
+                html += `
+                    <div class="test-result success">
+                        <h3>🎉 所有测试通过！</h3>
+                        <p>您的环境配置正确。如果仍然遇到问题，请访问 <a href="debug.html">调试页面</a> 进行详细诊断。</p>
+                        <p><strong>现在可以正常使用：</strong></p>
+                        <ul>
+                            <li><a href="main.html">主界面</a> - AI工具分类导航</li>
+                            <li><a href="index.html">AI助手</a> - 智能对话界面</li>
+                        </ul>
+                    </div>
+                `;
+            }
+            
+            resultsDiv.innerHTML = html;
+        }
+        
+        // 页面加载后显示当前环境信息
+        window.addEventListener('load', () => {
+            const info = document.createElement('div');
+            info.className = 'test-result info';
+            info.innerHTML = `
+                <h3>📍 当前环境信息</h3>
+                <p><strong>访问地址:</strong> ${window.location.href}</p>
+                <p><strong>协议:</strong> ${window.location.protocol}</p>
+                <p><strong>浏览器:</strong> ${navigator.userAgent.split(' ').pop()}</p>
+            `;
+            document.body.insertBefore(info, document.querySelector('button'));
+        });
+    </script>
+</body>
+</html>

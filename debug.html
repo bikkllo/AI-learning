@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>调试页面 - AI工具导航</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .debug-section {
+            background: #f5f5f5;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border-left: 4px solid #007cba;
+        }
+        .error {
+            background: #ffe6e6;
+            border-left-color: #d32f2f;
+        }
+        .success {
+            background: #e8f5e8;
+            border-left-color: #4caf50;
+        }
+        .warning {
+            background: #fff3cd;
+            border-left-color: #ff9800;
+        }
+        pre {
+            background: #f8f8f8;
+            padding: 10px;
+            border-radius: 3px;
+            overflow-x: auto;
+        }
+        button {
+            background: #007cba;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #005a8b;
+        }
+        #results {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔧 AI工具导航 - 调试页面</h1>
+    
+    <div class="debug-section">
+        <h2>📍 当前页面信息</h2>
+        <p><strong>页面URL:</strong> <span id="currentUrl"></span></p>
+        <p><strong>基础路径:</strong> <span id="basePath"></span></p>
+        <p><strong>协议:</strong> <span id="protocol"></span></p>
+    </div>
+
+    <div class="debug-section">
+        <h2>🔍 文件路径测试</h2>
+        <p>点击按钮测试不同路径下的 tools.json 文件是否可以访问：</p>
+        <button onclick="testPath('data/tools.json')">测试: data/tools.json</button>
+        <button onclick="testPath('./data/tools.json')">测试: ./data/tools.json</button>
+        <button onclick="testPath('../data/tools.json')">测试: ../data/tools.json</button>
+        <button onclick="testPath('front/data/tools.json')">测试: front/data/tools.json</button>
+        <button onclick="testAllPaths()">测试所有路径</button>
+    </div>
+
+    <div class="debug-section">
+        <h2>🌐 网络环境检测</h2>
+        <button onclick="checkNetworkEnvironment()">检测网络环境</button>
+        <div id="networkInfo"></div>
+    </div>
+
+    <div class="debug-section">
+        <h2>📁 文件结构检查</h2>
+        <button onclick="checkFileStructure()">检查文件结构</button>
+        <div id="fileStructure"></div>
+    </div>
+
+    <div id="results"></div>
+
+    <script>
+        // 显示当前页面信息
+        document.getElementById('currentUrl').textContent = window.location.href;
+        document.getElementById('basePath').textContent = window.location.origin + window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
+        document.getElementById('protocol').textContent = window.location.protocol;
+
+        // 测试单个路径
+        async function testPath(path) {
+            const resultsDiv = document.getElementById('results');
+            const testDiv = document.createElement('div');
+            testDiv.className = 'debug-section';
+            
+            try {
+                testDiv.innerHTML = `<h3>🔄 测试路径: ${path}</h3><p>正在测试...</p>`;
+                resultsDiv.appendChild(testDiv);
+                
+                const response = await fetch(path);
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    testDiv.className = 'debug-section success';
+                    testDiv.innerHTML = `
+                        <h3>✅ 成功: ${path}</h3>
+                        <p><strong>状态码:</strong> ${response.status}</p>
+                        <p><strong>内容类型:</strong> ${response.headers.get('content-type')}</p>
+                        <p><strong>数据大小:</strong> ${JSON.stringify(data).length} 字符</p>
+                        <p><strong>分类数量:</strong> ${data.categories ? data.categories.length : '未找到categories'}</p>
+                        <details>
+                            <summary>查看数据结构</summary>
+                            <pre>${JSON.stringify(data, null, 2).substring(0, 500)}...</pre>
+                        </details>
+                    `;
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                testDiv.className = 'debug-section error';
+                testDiv.innerHTML = `
+                    <h3>❌ 失败: ${path}</h3>
+                    <p><strong>错误:</strong> ${error.message}</p>
+                    <p><strong>错误类型:</strong> ${error.name}</p>
+                `;
+            }
+        }
+
+        // 测试所有路径
+        async function testAllPaths() {
+            const paths = [
+                'data/tools.json',
+                './data/tools.json',
+                '../data/tools.json',
+                'front/data/tools.json'
+            ];
+            
+            document.getElementById('results').innerHTML = '<div class="debug-section"><h3>🔄 测试所有路径...</h3></div>';
+            
+            for (const path of paths) {
+                await testPath(path);
+                await new Promise(resolve => setTimeout(resolve, 500)); // 延迟500ms
+            }
+        }
+
+        // 检测网络环境
+        async function checkNetworkEnvironment() {
+            const networkDiv = document.getElementById('networkInfo');
+            networkDiv.innerHTML = '<p>🔄 检测中...</p>';
+            
+            const info = {
+                userAgent: navigator.userAgent,
+                language: navigator.language,
+                cookieEnabled: navigator.cookieEnabled,
+                onLine: navigator.onLine,
+                platform: navigator.platform,
+                referrer: document.referrer || '无',
+                domain: window.location.hostname,
+                port: window.location.port || '默认端口',
+                isLocalhost: window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1',
+                isFileProtocol: window.location.protocol === 'file:',
+                isHttps: window.location.protocol === 'https:'
+            };
+            
+            let html = '<div class="debug-section">';
+            for (const [key, value] of Object.entries(info)) {
+                html += `<p><strong>${key}:</strong> ${value}</p>`;
+            }
+            html += '</div>';
+            
+            // 特殊提示
+            if (info.isFileProtocol) {
+                html += '<div class="debug-section warning"><h4>⚠️ 警告</h4><p>您正在使用 file:// 协议访问页面。这可能导致 AJAX 请求失败。建议使用 HTTP 服务器访问页面。</p></div>';
+            }
+            
+            if (info.isLocalhost) {
+                html += '<div class="debug-section warning"><h4>💡 提示</h4><p>您正在本地环境中访问页面。请确保文件路径正确。</p></div>';
+            }
+            
+            networkDiv.innerHTML = html;
+        }
+
+        // 检查文件结构
+        async function checkFileStructure() {
+            const structureDiv = document.getElementById('fileStructure');
+            structureDiv.innerHTML = '<p>🔄 检查中...</p>';
+            
+            const filesToCheck = [
+                'main.html',
+                'index.html',
+                'category.html',
+                'main.css',
+                'styles.css',
+                'category.css',
+                'js/main.js',
+                'js/category.js',
+                'app.js',
+                'data/tools.json'
+            ];
+            
+            let html = '<div class="debug-section"><h4>文件存在性检查:</h4>';
+            
+            for (const file of filesToCheck) {
+                try {
+                    const response = await fetch(file, { method: 'HEAD' });
+                    if (response.ok) {
+                        html += `<p>✅ ${file}</p>`;
+                    } else {
+                        html += `<p>❌ ${file} (${response.status})</p>`;
+                    }
+                } catch (error) {
+                    html += `<p>❌ ${file} (${error.message})</p>`;
+                }
+            }
+            
+            html += '</div>';
+            structureDiv.innerHTML = html;
+        }
+
+        // 页面加载完成后自动检测网络环境
+        window.addEventListener('load', () => {
+            checkNetworkEnvironment();
+        });
+    </script>
+</body>
+</html>
